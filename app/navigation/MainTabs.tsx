@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../ui/HomeScreen';
 import SettingsScreen from '../ui/SettingsScreen';
 
@@ -24,17 +25,34 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 export default function MainTabs() {
   return (
     <Tab.Navigator
-      screenOptions={{
-        // TODO: Lägg till ikoner för tabs här
+      screenOptions={({ route }) => ({
         headerShown: true, // Visar header för tab-skärmar
-      }}
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName: keyof typeof Ionicons.glyphMap;
+
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Settings') {
+            iconName = focused ? 'settings' : 'settings-outline';
+          } else {
+            iconName = 'help-outline';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#3b82f6', // Blå färg för aktiv tab
+        tabBarInactiveTintColor: '#6b7280', // Grå färg för inaktiv tab
+        tabBarStyle: {
+          backgroundColor: 'white',
+          borderTopColor: '#e5e7eb',
+        },
+      })}
     >
       <Tab.Screen 
         name="Home" 
         component={HomeScreen}
         options={{ 
           title: 'Hem',
-          // TODO: Lägg till tabBarIcon här
         }}
       />
       <Tab.Screen 
@@ -42,7 +60,6 @@ export default function MainTabs() {
         component={SettingsScreen}
         options={{ 
           title: 'Inställningar',
-          // TODO: Lägg till tabBarIcon här
         }}
       />
     </Tab.Navigator>
