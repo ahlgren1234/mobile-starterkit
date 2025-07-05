@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { useUserStore } from '../store/useUserStore';
 
 /**
- * LoginScreen - Inloggningsskärm för appen
+ * LoginScreen - Authentication screen for the app
  * 
- * Denna skärm visar ett formulär för e-post/lösenord inloggning.
- * Användaren kan logga in eller registrera sig.
+ * This screen displays a form for email/password authentication.
+ * Users can log in or register.
  */
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -15,45 +15,45 @@ export default function LoginScreen() {
   const { login, register, isLoading } = useUserStore();
 
   /**
-   * Hanterar inloggningsförsök med e-post och lösenord
+   * Handles authentication attempts with email and password
    */
   const handleAuth = async () => {
-    // Validera input
+    // Validate input
     if (!email || !email.includes('@')) {
-      Alert.alert('Fel', 'Ange en giltig e-postadress');
+      Alert.alert('Error', 'Please enter a valid email address');
       return;
     }
 
     if (!password || password.length < 6) {
-      Alert.alert('Fel', 'Lösenordet måste vara minst 6 tecken');
+      Alert.alert('Error', 'Password must be at least 6 characters');
       return;
     }
 
-    // Försök logga in eller registrera
+    // Attempt login or register
     const result = isRegistering 
       ? await register(email, password)
       : await login(email, password);
     
     if (result.success) {
       Alert.alert(
-        'Framgång!', 
+        'Success!', 
         isRegistering 
-          ? 'Konto skapat! Du är nu inloggad.'
-          : 'Inloggning lyckades!'
+          ? 'Account created! You are now logged in.'
+          : 'Login successful!'
       );
     } else {
-      Alert.alert('Fel', result.error || 'Ett fel uppstod');
+      Alert.alert('Error', result.error || 'An error occurred');
     }
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
-      {/* Huvudrubrik */}
+      {/* Main title */}
       <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#1f2937', marginBottom: 32 }}>
-        Välkommen
+        Welcome
       </Text>
       
-      {/* E-post input */}
+      {/* Email input */}
       <TextInput
         style={{
           width: '100%',
@@ -64,7 +64,7 @@ export default function LoginScreen() {
           fontSize: 16,
           marginBottom: 16,
         }}
-        placeholder="Ange din e-postadress"
+        placeholder="Enter your email address"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -72,7 +72,7 @@ export default function LoginScreen() {
         autoCorrect={false}
       />
       
-      {/* Lösenord input */}
+      {/* Password input */}
       <TextInput
         style={{
           width: '100%',
@@ -83,7 +83,7 @@ export default function LoginScreen() {
           fontSize: 16,
           marginBottom: 24,
         }}
-        placeholder="Ange ditt lösenord"
+        placeholder="Enter your password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -91,7 +91,7 @@ export default function LoginScreen() {
         autoCorrect={false}
       />
       
-      {/* Huvudknapp */}
+      {/* Main button */}
       <TouchableOpacity 
         style={{ 
           backgroundColor: isLoading ? '#9ca3af' : '#3b82f6', 
@@ -105,17 +105,17 @@ export default function LoginScreen() {
         disabled={isLoading}
       >
         <Text style={{ color: 'white', fontWeight: '600', fontSize: 18, textAlign: 'center' }}>
-          {isLoading ? 'Bearbetar...' : (isRegistering ? 'Skapa konto' : 'Logga in')}
+          {isLoading ? 'Processing...' : (isRegistering ? 'Create Account' : 'Sign In')}
         </Text>
       </TouchableOpacity>
       
-      {/* Växla mellan login/register */}
+      {/* Toggle between login/register */}
       <TouchableOpacity 
         onPress={() => setIsRegistering(!isRegistering)}
         style={{ padding: 8 }}
       >
         <Text style={{ color: '#3b82f6', fontSize: 16, textAlign: 'center' }}>
-          {isRegistering ? 'Har du redan ett konto? Logga in' : 'Inget konto? Skapa ett'}
+          {isRegistering ? 'Already have an account? Sign in' : 'No account? Create one'}
         </Text>
       </TouchableOpacity>
     </View>

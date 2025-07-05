@@ -65,7 +65,7 @@ export const useUserStore = create<UserState>((set, get) => ({
       return { success: true };
     } catch (error) {
       console.error('Login exception:', error);
-      return { success: false, error: 'Ett oväntat fel uppstod' };
+      return { success: false, error: 'An unexpected error occurred' };
     } finally {
       set({ isLoading: false });
     }
@@ -94,12 +94,12 @@ export const useUserStore = create<UserState>((set, get) => ({
         return { success: false, error: error.message };
       }
 
-      // Kontrollera om användaren behöver verifiera e-post
+      // Check if user needs to verify email
       if (data.user && !data.user.email_confirmed_at) {
         console.log('User needs email verification');
         return { 
           success: false, 
-          error: 'Kontrollera din e-post och klicka på verifieringslänken för att aktivera ditt konto.' 
+          error: 'Check your email and click the verification link to activate your account.' 
         };
       }
 
@@ -107,7 +107,7 @@ export const useUserStore = create<UserState>((set, get) => ({
       return { success: true };
     } catch (error) {
       console.error('Registration exception:', error);
-      return { success: false, error: 'Ett oväntat fel uppstod' };
+      return { success: false, error: 'An unexpected error occurred' };
     } finally {
       set({ isLoading: false });
     }

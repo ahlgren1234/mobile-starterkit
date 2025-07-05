@@ -24,7 +24,7 @@ function LoadingScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
       <ActivityIndicator size="large" color="#3b82f6" />
-      <Text style={{ marginTop: 16, color: '#6b7280' }}>Laddar...</Text>
+      <Text style={{ marginTop: 16, color: '#6b7280' }}>Loading...</Text>
     </View>
   );
 }
@@ -63,14 +63,14 @@ export default function RootNavigator() {
           <Stack.Screen 
             name="Main" 
             component={MainTabs}
-            options={{ title: 'Huvudapp' }}
+            options={{ title: 'Main App' }}
           />
         ) : (
           // Användaren är inte inloggad - visa auth-flöde
           <Stack.Screen 
             name="Auth" 
             component={AuthStack}
-            options={{ title: 'Inloggning' }}
+            options={{ title: 'Authentication' }}
           />
         )}
       </Stack.Navigator>

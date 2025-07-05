@@ -3,25 +3,25 @@ import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { useUserStore } from '../store/useUserStore';
 
 /**
- * SettingsScreen - Inställningsskärm för användaren
+ * SettingsScreen - Settings screen for the user
  * 
- * Denna skärm visas när användaren väljer "Inställningar"-fliken.
- * Här kan användaren konfigurera app-inställningar, profil, etc.
+ * This screen is displayed when the user selects the "Settings" tab.
+ * Here the user can configure app settings, profile, etc.
  */
 export default function SettingsScreen() {
   const { user, logout, isLoading } = useUserStore();
 
   /**
-   * Hanterar utloggning
+   * Handles logout
    */
   const handleLogout = () => {
     Alert.alert(
-      'Logga ut',
-      'Är du säker på att du vill logga ut?',
+      'Sign Out',
+      'Are you sure you want to sign out?',
       [
-        { text: 'Avbryt', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         { 
-          text: 'Logga ut', 
+          text: 'Sign Out', 
           style: 'destructive',
           onPress: logout
         }
@@ -30,12 +30,12 @@ export default function SettingsScreen() {
   };
   return (
     <View style={{ flex: 1, backgroundColor: 'white', padding: 24 }}>
-      {/* Huvudrubrik */}
+      {/* Main title */}
       <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#1f2937', marginBottom: 32, textAlign: 'center' }}>
-        Inställningar
+        Settings
       </Text>
       
-      {/* Användarinfo */}
+      {/* User info */}
       {user && (
         <View style={{ 
           backgroundColor: '#f3f4f6', 
@@ -44,7 +44,7 @@ export default function SettingsScreen() {
           marginBottom: 24 
         }}>
           <Text style={{ fontSize: 16, fontWeight: '600', color: '#1f2937', marginBottom: 8 }}>
-            Inloggad som:
+            Signed in as:
           </Text>
           <Text style={{ fontSize: 14, color: '#6b7280' }}>
             {user.email}
@@ -52,7 +52,7 @@ export default function SettingsScreen() {
         </View>
       )}
       
-      {/* Logga ut knapp */}
+      {/* Sign out button */}
       <TouchableOpacity 
         style={{ 
           backgroundColor: '#ef4444', 
@@ -65,7 +65,7 @@ export default function SettingsScreen() {
         disabled={isLoading}
       >
         <Text style={{ color: 'white', fontWeight: '600', fontSize: 18, textAlign: 'center' }}>
-          {isLoading ? 'Loggar ut...' : 'Logga ut'}
+          {isLoading ? 'Signing out...' : 'Sign Out'}
         </Text>
       </TouchableOpacity>
     </View>

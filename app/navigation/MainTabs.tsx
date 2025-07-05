@@ -52,14 +52,14 @@ export default function MainTabs() {
         name="Home" 
         component={HomeScreen}
         options={{ 
-          title: 'Hem',
+          title: 'Home',
         }}
       />
       <Tab.Screen 
         name="Settings" 
         component={SettingsScreen}
         options={{ 
-          title: 'Inställningar',
+          title: 'Settings',
         }}
       />
     </Tab.Navigator>

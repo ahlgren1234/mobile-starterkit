@@ -2,24 +2,24 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 /**
- * HomeScreen - Huvudskärm för inloggade användare
+ * HomeScreen - Main screen for logged-in users
  * 
- * Denna skärm visas när användaren är inloggad och väljer "Hem"-fliken.
- * För nu är det en enkel välkomstskärm.
+ * This screen is displayed when the user is logged in and selects the "Home" tab.
+ * For now, it's a simple welcome screen.
  * 
- * TODO: Lägg till faktiskt innehåll som användaren vill se på hemskärmen
+ * TODO: Add actual content that users want to see on the home screen
  */
 export default function HomeScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
-      {/* Huvudrubrik */}
+      {/* Main title */}
       <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#1f2937', marginBottom: 16 }}>
-        Hem
+        Home
       </Text>
       
-      {/* Beskrivande text */}
+      {/* Descriptive text */}
       <Text style={{ color: '#6b7280', textAlign: 'center' }}>
-        Välkommen till din app!
+        Welcome to your app!
       </Text>
     </View>
   );
