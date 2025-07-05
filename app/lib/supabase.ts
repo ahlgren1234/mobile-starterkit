@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /**
  * Supabase-klient för autentisering och databasåtkomst
@@ -27,9 +28,51 @@ if (!supabaseUrl || !supabaseAnonKey) {
 /**
  * Skapar och exporterar Supabase-klienten
  * 
+ * Konfigurerad för React Native med:
+ * - Session-persistence för att behålla inloggning mellan app-starts
+ * - Automatisk token-refresh
+ * 
  * @returns Supabase-klient instans
  */
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    // Aktivera session-persistence för React Native
+    storage: {
+      getItem: async (key) => {
+        try {
+          const value = await AsyncStorage.getItem(key);
+          console.log('Auth storage get:', key, value ? 'found' : 'not found');
+          return value;
+        } catch (error) {
+          console.error('Error getting auth storage:', error);
+          return null;
+        }
+      },
+      setItem: async (key, value) => {
+        try {
+          await AsyncStorage.setItem(key, value);
+          console.log('Auth storage set:', key);
+        } catch (error) {
+          console.error('Error setting auth storage:', error);
+        }
+      },
+      removeItem: async (key) => {
+        try {
+          await AsyncStorage.removeItem(key);
+          console.log('Auth storage removed:', key);
+        } catch (error) {
+          console.error('Error removing auth storage:', error);
+        }
+      },
+    },
+    // Automatisk session-refresh
+    autoRefreshToken: true,
+    // Behåll session mellan app-starts
+    persistSession: true,
+    // Detektera session-ändringar
+    detectSessionInUrl: false,
+  },
+});
 
 /**
  * Auth-typer för TypeScript

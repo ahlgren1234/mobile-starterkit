@@ -141,16 +141,22 @@ export const useUserStore = create<UserState>((set, get) => ({
    */
   loadUser: async () => {
     try {
-      set({ isLoading: true });
+      console.log('Loading user data from Supabase...');
       
       // Hämta nuvarande session
       const { data: { session }, error } = await supabase.auth.getSession();
       
       if (error) {
         console.error('Load user error:', error);
-        set({ user: null, isLoggedIn: false });
+        set({ user: null, isLoggedIn: false, isLoading: false });
         return;
       }
+
+      console.log('Session loaded:', {
+        hasSession: !!session,
+        hasUser: !!session?.user,
+        userEmail: session?.user?.email,
+      });
 
       if (session?.user) {
         // Användare är inloggad
@@ -161,16 +167,16 @@ export const useUserStore = create<UserState>((set, get) => ({
           updated_at: session.user.updated_at || session.user.created_at,
         };
         
-        set({ user, isLoggedIn: true });
+        console.log('Setting user as logged in:', user.email);
+        set({ user, isLoggedIn: true, isLoading: false });
       } else {
         // Ingen användare inloggad
-        set({ user: null, isLoggedIn: false });
+        console.log('No user session found');
+        set({ user: null, isLoggedIn: false, isLoading: false });
       }
     } catch (error) {
       console.error('Load user exception:', error);
-      set({ user: null, isLoggedIn: false });
-    } finally {
-      set({ isLoading: false });
+      set({ user: null, isLoggedIn: false, isLoading: false });
     }
   },
 
@@ -187,6 +193,9 @@ export const useUserStore = create<UserState>((set, get) => ({
 /**
  * Lyssnar på auth-state ändringar från Supabase
  * Uppdaterar store automatiskt när användaren loggar in/ut
+ * 
+ * Denna lyssnare sätts upp en gång när store skapas
+ * och lyssnar på alla auth-state ändringar
  */
 supabase.auth.onAuthStateChange(async (event, session) => {
   console.log('=== AUTH STATE CHANGE ===');
@@ -210,6 +219,31 @@ supabase.auth.onAuthStateChange(async (event, session) => {
     console.log('User signed out');
     // Användare loggade ut
     useUserStore.setState({ user: null, isLoggedIn: false, isLoading: false });
+  } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+    console.log('Token refreshed');
+    // Token uppdaterad - uppdatera användardata
+    const user: AuthUser = {
+      id: session.user.id,
+      email: session.user.email || '',
+      created_at: session.user.created_at,
+      updated_at: session.user.updated_at || session.user.created_at,
+    };
+    useUserStore.setState({ user, isLoggedIn: true, isLoading: false });
+  } else if (event === 'INITIAL_SESSION') {
+    if (session?.user) {
+      console.log('Initial session found - user is already logged in');
+      // Användare har redan en session (app startade)
+      const user: AuthUser = {
+        id: session.user.id,
+        email: session.user.email || '',
+        created_at: session.user.created_at,
+        updated_at: session.user.updated_at || session.user.created_at,
+      };
+      useUserStore.setState({ user, isLoggedIn: true, isLoading: false });
+    } else {
+      console.log('No initial session found - user needs to log in');
+      useUserStore.setState({ user: null, isLoggedIn: false, isLoading: false });
+    }
   } else {
     console.log('Other auth event:', event);
   }

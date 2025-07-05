@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text, ActivityIndicator } from 'react-native';
 import AuthStack from './AuthStack';
 import MainTabs from './MainTabs';
-import { useUserStore } from '../store/useUserStore';
+import { useSession } from '../lib/useSession';
 
 /**
  * TypeScript-typer för root-navigation
@@ -36,17 +36,18 @@ function LoadingScreen() {
  * - LoadingScreen: Medan användardata laddas
  * - AuthStack: När användaren inte är inloggad (LoginScreen)
  * - MainTabs: När användaren är inloggad (HomeScreen, SettingsScreen)
+ * 
+ * Använder useSession hook för att:
+ * 1. Lyssna på session-ändringar via useEffect
+ * 2. Zustand store som central källa för auth-state
+ * 3. Automatisk session-hantering
  */
 export default function RootNavigator() {
-  const { isLoggedIn, isLoading, loadUser } = useUserStore();
-
-  // Ladda användardata när appen startar
-  useEffect(() => {
-    loadUser();
-  }, [loadUser]);
+  const { isLoggedIn, isLoading } = useSession();
 
   // Visa loading screen medan användardata laddas
   if (isLoading) {
+    console.log('RootNavigator: Showing loading screen');
     return <LoadingScreen />;
   }
 
