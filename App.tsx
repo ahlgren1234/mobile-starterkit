@@ -1,20 +1,26 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import RootNavigator from './app/navigation/RootNavigator';
 
+/**
+ * App - Huvudkomponent för hela appen
+ * 
+ * Denna komponent är entry point för appen och sätter upp:
+ * - Navigation (RootNavigator) som hanterar auth-state
+ * - Status bar
+ * - Supabase auth-state lyssnare (via useUserStore)
+ * 
+ * TODO: Lägg till fler global providers här (t.ex. RevenueCat, PostHog, etc.)
+ */
 export default function App() {
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <>
+      {/* Status bar konfiguration */}
       <StatusBar style="auto" />
-    </View>
+      
+      {/* Huvudnavigation som hanterar auth/main-flöden */}
+      <RootNavigator />
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
